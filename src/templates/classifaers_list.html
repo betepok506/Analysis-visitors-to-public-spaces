@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="list_process_detector" id = "list_process">
+
+        {% for classifaer in list_classifaers %}
+            <div class="detector">
+                <div  class="content">
+                    <form action="/detectors" id="events_process_old" onsubmit="return false;">
+                        <div class="show_camera">
+                            <div class="name_cam">Классификатор № {{ classifaer.id }}</div>
+                            <div class="status_cam">
+                                {% if classifaer.status == 0: %}
+                                    Статус: Остановлен
+                                {% elif classifaer.status == 1: %}
+                                    Статус: Запущен
+                                {% endif %}  
+                            </div>
+                        </div>
+                        <input type="hidden" name = 'Classifaer_{{ classifaer.id }}'>
+                        <div class="button_add_camera">
+                            <button type="submit" class="button_camera" name = 'delete' >Удалить</button>
+                        </div>
+                    </form>
+                                    
+                </div>        
+            </div>
+        {% endfor %}
+        <div data-display="none" class="block_add_detector" id="id_add_classifaer" style="display: none;">
+            <form action="/classifaers"  onsubmit="return false;" id="classifaer">
+                <div class="add_process">   
+                    <div class="tabs"> 
+                        <div class="item">
+                            <label for="label_rabbit_header">Хеадер </label>
+                            {% if list_header|length > 0 %}
+                                <select id="rabbit_header">
+                                    {% for header in list_header %}
+                                        <option value="{{ header }}" id = "name_header"> {{ header }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div> 
+                        <div class="item">
+                            <label for="label_rabbit_header">Тип классификатора </label>
+                            <select id="type_classifaer">
+                                <option value="1" > Классификатор возраста</option>
+                                <option value="2" > Классификатор пола</option>
+                            </select>
+                        </div> 
+                    </div>
+
+                    <div class="button_add_camera">
+                        <button type="submit" class="button_camera" onclick="button_click_add_classifaer()" name="add">Добавить</button> 
+                        <button type="submit" class="button_camera" >Удалить</button> 
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="button_show_add_detector">
+            <button  class="button" onclick="button_click_add_classifaer()">Создать классификатор</button>
+        </div>
+
+    </div>
+{% endblock %}

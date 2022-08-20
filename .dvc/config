@@ -1,0 +1,7 @@
+[core]
+    remote = myremote
+['remote "storage"']
+    url = https://iesminio.mrsu.ru
+['remote "myremote"']
+    url = s3://hakaton082021
+    endpointurl = https://iesminio.mrsu.ru

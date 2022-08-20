@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="list_process_detector" id = "list_process">
+
+        {% for header in list_headers %}
+            <div class="detector">
+                <div  class="content">
+                    <form action="/detectors" id="events_process_old" onsubmit="return false;">
+                        <div class="show_camera">
+                            <div class="name_cam">{{ header.name_header }}</div>
+                            <div class="status_cam"> 
+                                {% if header.status == 0: %}
+                                    Статус: Остановлен
+                                {% elif header.status == 1: %}
+                                    Статус: Запущен
+                                {% endif %}
+                            </div>
+                        </div>
+                        <input type="hidden" name = 'Header_{{ header.id }}'>
+<!--                        <div class="button_add_camera">-->
+<!--                            <button type="submit" class="button_camera" name = 'delete' >Удалить</button>-->
+<!--                        </div>-->
+                    </form>
+                                    
+                </div>        
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

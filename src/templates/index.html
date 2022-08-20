@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h1 class="title">Статистика по области наблюдения</h1>
+    <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn">Выберите зону</button>
+        <div id="myDropdown" class="dropdown-content">
+            {% for camera in list_camers %}
+                <a href="/{{ camera }}">{{ camera }}</a>
+          {% endfor %}
+        </div>
+    </div>
+    <div class="table">        
+        <div class="cols-item-left">
+            <div class="row-item-info">
+                <div class='bokeh'>
+                    {{graphs[5]|safe}}
+                    {{graphs[4]|safe}}
+                </div>
+            </div>
+            
+            <div class="row-item-info">
+                <div class='bokeh'>
+                    {{graphs[9]|safe}}
+                    {{graphs[8]|safe}}
+                </div>
+            </div>
+            
+            <div class="row-item-info">
+                <div class='bokeh'>
+                    {{graphs[3]|safe}}
+                    {{graphs[2]|safe}}
+                </div>
+            </div>  
+            
+        </div>
+
+        <div class="cols-item">
+            <div class="col-title">
+                <div class="row-item-info">
+                    <div class="map">
+                        <svg class="svg_map" viewBox="0 0 970 852">
+                            {% for ind in range(roads|length): %}
+                                <a href={{roads[ind].area_id}}>
+                                    <path class="part" d="{{roads[ind].polygons}}" style = "opacity: 0.55; fill: green;">
+                                    </path>
+                                </a>
+                            {% endfor %}
+                            <img src="static/img/Karta.svg" width="100%" height="100%" alt="">
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="row-item-info-slider">
+                    {{ graphs[11]|safe }}
+                    {{ graphs[10]|safe }}
+                </div>
+                
+
+                <div class="row-item-info-slider">
+                    {{ graphs[13]|safe }}
+                    {{ graphs[12]|safe }}
+                </div>
+                <div class="row-item-info-down">
+                    <div class="text_graph">Зона {{num_road}}</div>
+                    <div class='bokeh graph'>
+                        {{graphs[1]|safe}}
+                        {{graphs[0]|safe}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cols-item-right">    
+            <div class="row-item-info">
+                <div class='bokeh'>
+                    {{graphs[7]|safe}}
+                    {{graphs[6]|safe}}
+                </div>
+            </div>           
+        </div>        
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="list_process_detector" id = "list_process">
+
+        {% for detector in list_detectors %}
+            <div class="detector">
+                <div  class="content">
+                    <form action="/detectors" id="events_process_old" onsubmit="return false;">
+                        <div class="show_camera">
+                            <div class="name_cam">Детектор № {{ detector.id }}</div>
+                            <div class="status_cam"> 
+                                {% if detector.status == 0: %}
+                                    Статус: Остановлен
+                                {% elif detector.status == 1: %}
+                                    Статус: Запущен
+                                {% endif %} 
+                            </div>
+                        </div>
+                        <input type="hidden" name = 'Detector_{{ detector.id }}'>
+                        <div class="button_add_camera">
+                            <button type="submit" class="button_camera" name = 'delete' >Удалить</button>
+                        </div>
+                    </form>
+                                    
+                </div>        
+            </div>
+        {% endfor %}
+        
+        <div class="block_add_detector" id="id_add_detector" style="display: none;">
+            <form action="/detectors"  onsubmit="return false;" id="detector">
+                <div class="add_process">
+                    <div class="tabs"> 
+                        <div class="item"><label for="label_rabbit_header">Хеадер </label>
+                            {% if list_header|length > 0 %}
+                                <select id="rabbit_header">
+                                    {% for header in list_header %}
+                                        <option value="{{ header }}" id = "name_header"> {{ header }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div> 
+                    </div>
+
+                    <div class="button_add_camera">
+                        <button type="submit" class="button_camera" onclick="button_click_add_detector()" name="add">Добавить</button> 
+                        <button type="submit" class="button_camera" >Удалить</button> 
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="button_show_add_detector">
+            <button  class="button" onclick="button_click_add_detector()">Создать детектор</button>
+        </div>
+
+    </div>
+{% endblock %}

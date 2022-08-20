@@ -1,0 +1,30 @@
+<div class="camera" id = "add_camera">
+    <div class="content" style="width: 30%;">
+        <img src="/static/img/unnamed.jpg" width="200" height="200" alt="альтернативный текст">
+    </div>
+
+    <div  class="content" style="width:68%;">
+        <div class="tabs">
+            <form action="/camers" onsubmit="return false;">
+                <button type="submit"  onclick="video_mode(this)" value="strim">Стрим</button>
+                <button type="submit"  onclick="video_mode(this)"  value="load_video">Загрузка видео</button>
+            </form>
+            <div id = "strim_setting">
+                <div id="content_1" class="camera_setting">
+                    <div class="item"><label for="url">Url</label><input type="text" name="url" id="url" size="40"></div>
+                </div>
+            </div>
+            <div class="item"><label for="fps">Частота обработки </label><input type="text" id="fps"></div>
+            <div class="item"><label for="polygons">Полигоны </label><input type="text" id="polygons"></div>
+            <div class="button_extend_setting">
+                <form action="/camers" onsubmit="return false;">
+                    <button name="click_extend_setting" value="true" onclick="show_extend_setting()" type="submit">Расширенные настройки</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <form action="/camers" method="post">
+        <button type="submit" onclick = "check_param()" value="save_camera">Добавить</button>
+        <button type="submit" onclick = "" value="delet_camera">Удалить камеру</button>
+    </form>
+</div>

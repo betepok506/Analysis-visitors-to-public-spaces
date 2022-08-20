@@ -1,0 +1,4 @@
+[submodule "yolov5"]
+	path = yolov5
+	url = https://iesgit.mrsu.ru/kayros/yolov5.git
+	branch = remotes/origin/hakaton082021

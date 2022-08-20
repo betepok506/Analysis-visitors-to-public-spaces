@@ -1,0 +1,9 @@
+/data
+/mrsu_video
+/models
+**/.ipynb_checkpoints/*
+**/__pycache__/*
+*.avi
+*.pt
+.idea
+

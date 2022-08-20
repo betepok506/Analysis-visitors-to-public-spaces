@@ -1,0 +1,676 @@
+.bk-input-group
+{
+    width: 100%;
+}
+
+.body
+{
+    background: #f2f2f2;
+    min-height: 900px;
+}
+
+.text_graph{
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+}
+.title
+{
+    margin: 20px;
+    text-align: center;
+}
+
+.page_header{
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.page_header_left{
+    display: flex;
+    flex-direction: row;
+}
+.page_header_right{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.page_header_right a:last-child{
+    margin-left: 0px;
+}
+
+.page_header_left a:first-child{
+    margin-left: 0px;
+}
+
+.ping{
+    display: flex;
+    justify-content: flex-start;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    min-height: 600px;
+    color: #212529;
+    text-align: right;
+    background-color: #f1f1f1;
+  }
+
+/* Таблица */
+/* .table
+{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 95%;
+    height: 80%;
+    margin: auto;
+}
+
+.cols-item {
+    white-space: normal;
+    display: inline-block;
+    width: 40%;
+    vertical-align: top;
+
+    border-radius: 10px;
+}
+
+.cols-item-left {
+    white-space: normal;
+    display: inline-block;
+    width: 30%;
+    vertical-align: top;
+
+    border-radius: 10px;
+}
+
+.cols-item-right {
+    white-space: normal;
+    display: inline-block;
+    width: 29%;
+    vertical-align: top;
+    border-radius: 10px;
+}
+
+.col-title 
+{
+    text-align: center;
+} */
+
+.get_video{
+    display: flex;
+    flex-direction: column;
+}
+
+.header_setting{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+}
+
+.table{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.cols-item-left, .cols-item-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 500px;
+}
+
+
+.cols-item{
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+}
+
+.cols-item-info {
+    white-space: normal;
+    padding-top: 10px;
+    width:32%;
+    border-radius: 10px;
+}
+
+.row-item-info {
+    white-space: normal;
+    padding-top: 10px;
+    margin: 10px;
+    min-height: 350px;
+    vertical-align: top;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.row-item-info:last-child {
+    min-height: auto;
+}
+
+.row-item-info-slider {
+    white-space: normal;
+    padding: 5px 15px 5px 15px;
+    margin-top: 10px;
+    vertical-align: top;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.row-item-info-down {
+    white-space: normal;
+    padding-top: 10px;
+    margin-top: 10px;
+    vertical-align: top;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.row-item-info-right {
+    white-space: normal;
+    padding-top: 10px;
+    margin-top: 10px;
+    width: 80%;
+    /* vertical-align: top; */
+    background: #ffffff;
+    border-radius: 10px;
+} 
+/* Графики */
+ .bokeh{
+    width: 90%;
+    height: 100%;
+    margin: auto;
+    /* padding-bottom: 20px; */
+}
+
+.graph{
+    width: 90%;
+    height: 100%;
+    margin: auto;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+
+/* Карта */
+.map{
+    position: relative;
+    text-align: center;
+    padding-bottom: 50px;
+    width: 90%;
+    height: 90%;
+    margin: auto;
+    border-radius: 10px;
+}
+.svg_map{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 50px;
+}
+.part{
+    width: 100%;
+    height: 100%;
+    opacity: .8;
+}
+.part:hover{
+    transition: opacity .2s easy;
+    opacity: 1.0;
+    cursor: pointer;
+}
+
+
+/* Show cam */
+
+.show_camera{
+    display: flex;
+    margin:10px;
+    word-break: keep-all;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.name_cam, .status_cam{
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+.name_cam{
+    max-width: 260px;
+}
+
+
+/*  Camera Info */
+.list_process{
+    padding-top: 20px;
+    background:#edebf0fc; 
+}
+.list_process, .list_process_detector, .settings_body{
+    width: 80%;
+    margin: auto;
+    margin-top: 5%;
+    /* min-height: 700px; */
+    background:#edebf0fc; 
+    min-width: 700px;
+}
+
+.list_process, .list_process_detector{
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+
+/*  Settings */
+.block_setting{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.item_setting{
+    margin-top: 10px;
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+}
+.row_setting{
+    margin:10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-start;
+    min-width: 600px;
+}
+.left_column_settings{
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+}
+.left_column_settings label{
+   text-align: left;
+}
+.right_column_settings{
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.button_show_add_detector{
+    margin: 10px;
+    border: solid #483e4e 3px;
+    min-height: 100px;
+    min-width: 350px;
+    border-radius: 20px 20px 20px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detector{
+    width: 350px;
+    margin: 5px;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-self: flex-start;
+    word-break: break-all;
+    border-radius: 20px 20px 20px 20px;
+    background:#dcdde8fc;
+}
+
+.add_process{
+    margin: 20px;
+}
+
+.block_add_detector{
+    background:#dcdde8fc;
+    border-radius: 20px 20px 20px 20px;
+}
+.block_add_detector, .detector, .button_show_add_detector{
+    min-width: 420px;
+}
+
+.button_add_subprocess{
+    padding: 20px;
+    margin: 5px;
+    width: 350px;
+    border-radius: 20px 20px 20px 20px;
+    background:#dcdde8fc;
+}
+
+
+.button_show_add_subprocess{
+    margin: 5px;
+    min-height: 110px;
+    border-style: solid;
+    border-color:#dcdde8fc;
+    border-radius: 20px 20px 20px 20px;
+    /* text-align: center;  */
+    width: 350px;
+    display: flex;
+    justify-content:center;
+}
+
+/* Create cam */
+.tabs{
+    margin: 10px 0px 10px 0px;  
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+}
+
+.camera, .add_camera{
+    width: 70%; 
+    min-height: 150px; 
+    min-width: 740px;
+    max-width: 740px;
+    margin-top: 10px;
+    padding: 20px; 
+    border-radius: 20px 20px 20px 20px;
+    background:#dcdde8fc;
+}
+
+
+.camera{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.show_add_cam{
+    margin: 10px;
+    display: flex;
+    border: solid #483e4e 3px;
+    border-radius: 20px 20px 20px 20px;
+    min-height: 150px; 	
+    width: 740px;
+    min-width: 590px;
+    justify-content: center;
+    align-items: center;
+}
+
+.camera input, .add_camera input{
+    height: 24px;
+}
+
+.camera select, .add_camera select{
+    height: 24px;
+}
+
+
+.add_camera{
+    margin: 10px;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.button_add_camera{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.button_editing_camera{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.button_add_camera button{
+    margin: 5px;
+}
+
+.button_add_camera button:last-child{
+    margin-right: 0px;
+}
+
+
+.item{
+    padding-top: 3px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.extend_setting{
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+/* Button */
+.button, .button_camera {
+    background-color: #cccdcffc;
+    border: 2px solid #c3c4c9fc;
+    color: black;
+    margin: 5px;
+    height: 32px;
+    padding: 2px 8px; 
+    text-decoration: none;
+    font-size: 16px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    cursor: pointer;
+} 
+
+ .button:hover, .button_camera:hover 
+{
+    background-color: #e7e7e7;
+}
+
+
+
+/* Toast */
+
+:root{
+    --toast-width:350px;
+    --toast-border-radius:0.25rem;
+    --toast-theme-default:#fff;
+    --toast-theme-primary:#0d6efd;
+    --toast-theme-secondary:#6c757d;
+    --toast-theme-success:#198754;
+    --toast-theme-danger:#dc3545;
+    --toast-theme-warning:#ffc107;
+    --toast-theme-info:#0dcaf0;
+    --toast-theme-light:#f8f9fa;
+    --toast-theme-dark:#212529
+}
+.toast-container{
+    position:fixed;
+    top:90%;
+    right:15px;
+    width:var(--toast-width)
+}
+.toast
+{
+    font-size:16px;
+    background-clip:padding-box;
+    border:1px solid rgba(0,0,0,.05);
+    border-radius:var(--toast-border-radius);
+    box-shadow:0 .125rem .25rem rgba(0,0,0,.075);
+    position:relative;
+    overflow:hidden;
+    transition:.3s opacity
+}
+.toast_default
+{
+    color:#212529;
+    background-color:var(--toast-theme-default)
+}
+.toast_primary
+{
+    color:#fff;
+    background-color:var(--toast-theme-primary)
+}
+.toast_secondary
+{
+    color:#fff;
+    background-color:var(--toast-theme-secondary)
+}
+.toast_success
+{
+    color:#fff;
+    background-color:var(--toast-theme-success)
+}
+.toast_danger
+{
+    color:#fff;
+    background-color:var(--toast-theme-danger)
+}
+.toast_warning{
+    color:#212529;
+    background-color:var(--toast-theme-warning)
+}
+.toast_info{
+    color:#212529;
+    background-color:var(--toast-theme-info)
+}
+.toast_light{
+    color:#212529;
+    background-color:var(--toast-theme-light)
+}
+.toast_dark{
+    color:#fff;
+    background-color:var(--toast-theme-dark)
+}
+.toast_danger .toast__close,.toast_dark .toast__close,.toast_primary .toast__close,.toast_secondary .toast__close,.toast_success .toast__close{filter:invert(1)}.toast:not(:last-child){margin-bottom:.75rem}.toast:not(.toast_show){display:none}.toast_showing{opacity:0}
+.toast__header{position:relative;padding:.5rem 2.25rem .5rem 1rem;
+    background-color:rgba(0,0,0,.03);
+    border-bottom:1px solid rgba(0,0,0,.05)
+}
+
+.toast__close{content:"";
+        position:absolute;
+        top:.75rem;
+        right:.75rem;
+        width:.875em;
+        height:.875em;
+        background:transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/.875em auto no-repeat;
+        border:0;opacity:.5;
+        cursor:pointer;
+        transition:opacity .1s ease-in-out
+}
+    .toast__close:hover{opacity:1}
+.toast__body{
+    padding:1rem;
+}
+
+.toast_message .toast__body{
+    padding-right:2.25rem
+}
+
+
+/* Polygons */
+.polygons{
+    margin-top: 40px;
+    width: 700px;
+    min-width: 680px;
+    background-color: #dcdde8fc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.list_polygons{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.polygons_item{
+    display: flex;
+    width: 600px;
+    margin-top: 10px;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.block_button_polygons{
+    margin: 20px;
+    display: flex;
+    width: 600px;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+}
+/* Крестик */
+.closebtn {
+
+    /* margin-left: 15px; */
+    color: rgb(56, 55, 55);
+    font-weight: bold;
+    /* float: right; */
+    font-size: 30px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: rgb(247, 9, 9);
+}
+
+/* Выпадающий список камер */
+.dropbtn {
+    background-color: #3498DB;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropbtn:hover, .dropbtn:focus {
+    background-color: #2980B9;
+  }
+  
+  .dropdown {
+    display: relative;
+    display: inline-block;
+    float: left;
+    margin: 20px;
+    margin-left: 50px;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown a:hover {background-color: #ddd;}
+  
+  .show {display: block;}

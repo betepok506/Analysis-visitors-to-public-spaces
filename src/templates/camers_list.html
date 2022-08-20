@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% block body %}
+<script>
+    $(function($) {
+        //задание заполнителя с помощью параметра placeholder
+        $(".mask-date").mask("9999-99-99 99-99-99", {placeholder: "гггг-мм.дд чч-мм-сс" });
+    });
+</script>
+<div class="list_process" id = "list_process">
+    {% for ind in range(list_camers|length) %}
+        <div class="camera">
+            <form action="/camers" id="events_process" onsubmit="return false;">
+                <div style="display:flex; flex-direction: row; justify-content: space-between;">
+                    <div id = "add_camera">
+                        <div class="content" style="width: 30%;">
+                            <img src="/static/img/cam_{{ list_camers[ind].id }}.jpg" onError="this.src='/static/img/unnamed.jpg'" width="200" height="180" alt="альтернативный текст">
+                        </div>
+                    </div>
+
+                    <div style="display:flex; flex-direction: column;">
+                        <div class="show_camera">
+                            <div class="name_cam">{{ list_camers[ind].name_cam }}</div>
+                            
+                            <div class="status_cam"> 
+                                {% if status_camers|length > ind %}
+                                    {% if status_camers[ind].status == 0: %}
+                                        Статус: Остановлена
+                                    {% elif status_camers[ind].status == 2: %}
+                                        Статус: Запущена
+                                    {% elif status_camers[ind].status == -1: %}
+                                        Статус: Завершена
+                                    {% endif %}
+                                {% else %}
+                                    Статус: Запускается
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <input type="hidden" name = 'Camera_{{ list_camers[ind].id }}'>
+                        <div class="button_editing_camera">
+                            <button type="submit" class="button_camera" onclick="button_click_events_process(this)" name = 'editing_{{ list_camers[ind].id }}' >Настройки</button>
+                            <button type="submit" class="button_camera" onclick="button_click_events_process(this)" name = 'stop_{{ list_camers[ind].id }}' >Остановить</button>
+                            <button type="submit" class="button_camera" onclick="button_click_events_process(this)" name = 'delete_{{ list_camers[ind].id }}' >Удалить</button>
+                            <button type="submit" class="button_camera" onclick="button_click_events_process(this)" name = 'run_{{ list_camers[ind].id }}' >Запустить</button>
+                            <button type="submit" class="button_camera" onclick="button_click_events_process(this)" name = 'editing-polygons_{{ list_camers[ind].id }}' >Редактирование полигонов</button>
+                            <button type="submit" class="button_camera" onclick="button_click_events_process(this)" name = 'get-video_{{ list_camers[ind].id }}' >Демонстрационное видео</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="camera_{{ list_camers[ind].id }}" style="margin-top: 10px; display: none;">
+
+                    <div class="item">
+                        <label for="name_cam">Имя камеры </label>
+                        <input type="text" id ="name_cam" name = "name_cam"  value="">
+                    </div>
+
+                    <div class="item">
+                        <label for="ts">Время начала видео</label>
+                            <input class="mask-date" type="text" id="ts" name="ts">
+                    </div>
+
+                    <div class="item">
+                        <label for="fps">Частота обработки </label>
+                        <input type="text" name = "fps" id="fps" onkeyup='button_click_onkeyup(this)' value="{{ default_params.proc_freq }}">
+                    </div>
+
+
+                    <div class="item">
+                        <label for="max_dist_bboxes">Максимальная дистанция между боксами px</label>
+                        <input type="number" name = "max_dist_bboxes" id="max_dist_bboxes" onkeyup='button_click_onkeyup(this)'>
+                    </div>
+
+                    <div class="item">
+                        <label for="min_square_bboxes">Минимальная площадь бокса детекции px</label>
+                        <input type="number" name = "min_square_bboxes" id="min_square_bboxes" onkeyup='button_click_onkeyup(this)'>
+                    </div>
+
+                    <div class="item">
+                        <label for="time_delete_tracking">Количество кадров удаления трекера</label>
+                        <input type="number" name = "time_delete_tracking" id="time_delete_tracking" onkeyup='button_click_onkeyup(this)'>
+                    </div>
+
+                    <div class="button_add_camera">
+                        <button type="submit" class="button_camera" onclick="button_click_events_process(this)" name = 'save_{{ list_camers[ind].id }}'>Сохранить</button>
+                    </div>
+                </div>
+                
+                <div class="polygons polygons_{{ list_camers[ind].id }}" style="display: none;">
+                    <div class="map" name="map_{{ list_camers[ind].id }}">
+                        <svg class="svg_map" name="svg_map_{{ list_camers[ind].id }}">
+                        </svg>
+                        <!-- <div class="map"></div> -->
+                        <img class='img_polygons_{{ list_camers[ind].id }}' 
+                            width="640px"
+                            height="640px"
+                            onError="this.src='/static/img/unnamed.jpg'" 
+                            src="static/img/cam_{{ list_camers[ind].id }}.jpg" >
+                    </div>
+                
+                    <div class="list_polygons" name ='list_polygons_{{ list_camers[ind].id }}' id ='list_polygons_{{ list_camers[ind].id }}' style="display: flex; justify-content: center;">
+                        <div class="polygons_item" id="polygons_item_1" name="polygons_item_1">
+                            <div>
+                                <label for="polygons">Полигон</label> 
+                                <input type="text" onchange="validation_polygons(this)" class='polygons_coord' name = "polygons_{{ list_camers[ind].id }}">
+                            </div>
+                            <div>
+                                <label for="polygons">Номер зоны</label> 
+                                <input type="number" onchange="validation_polygons(this)" class='id_cam' name = "id_cam_{{ list_camers[ind].id }}">
+                            </div>
+                            <div>
+                                <span class="closebtn" id="{{ list_camers[ind].id}}_1" onclick="span_click_closebtn(this)">&times;</span> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="block_button_polygons">
+                        <button type="submit" class="button_camera" name='add_{{ list_camers[ind].id }}' onclick="button_click_add_polygons(this)">Добавить полигон</button> 
+                        <button type="submit" class="button_camera" name='draw_{{ list_camers[ind].id }}' onclick="button_click_draw_polygons(this)" >Нарисовать</button> 
+                        <button type="submit" class="button_camera" name='save_{{ list_camers[ind].id }}' onclick="button_click_save_polygons(this)" >Сохранить</button> 
+                    </div>
+                </div>
+
+
+                <div class="get_video get_video_{{ list_camers[ind].id }}" style="display: none;">
+
+                    {% if dict_start_end_ts_by_cam[list_camers[ind].id].end_ts == -1 %}
+                        <div style="display: flex; justify-content: space-around; font-size: 18px; align-items: center;">
+                            Нет интервалов, доступных для запроса
+                        </div>
+                    {% else %}
+
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 18px; margin-top:20px;"> Создать видео за промежуток времени </div>
+
+                        <div style="display: flex; justify-content: space-around; align-items: flex-end; margin: 10px 0px 10px 0px;">
+                            {% if  list_camers[ind].all_frame %}
+                                <div style="width:450px; display: flex; flex-direction: column;">
+                                    <div style="display: flex; justify-content: left; align-items: center; font-size: 18px; margin: 0px 0px 10px 0px;">
+                                        Выберите диапазон времени
+                                    </div>
+
+                                        <div style="display: flex; justify-content: space-around; align-items: center;">
+                                            <label for="ts">С </label>
+                                            <input class="mask-date" type="text" id="ts_start_{{ list_camers[ind].id }}" name="ts_start" value="{{ dict_start_end_ts_by_cam[list_camers[ind].id].start_ts }}">
+
+                                            <label for="ts">По </label>
+                                            <input class="mask-date" type="text" id="ts_end_{{ list_camers[ind].id }}" name="ts_end" value="{{ dict_start_end_ts_by_cam[list_camers[ind].id].end_ts }}">
+                                        </div>
+
+                                </div>
+                                <button type="submit" class="button_camera" onclick="button_click_create_video(this)" name = '{{ list_camers[ind].id }}' >Запросить</button>
+                            {% else %}
+                               <button type="submit" class="button_camera" onclick="button_click_create_video(this)" name = '{{ list_camers[ind].id }}' >Запросить</button>
+                            {% endif %}
+
+                        </div>
+
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <div style="font-size: 18px;">
+                                Прогресс:
+                            </div>
+
+                            <div class="progress" style="width: 80%; margin: 10px;" >
+                                <div class="progress-bar progress-bar-striped " role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="prog_{{list_camers[ind].id}}">
+                                    <span class="progress-bar-label" id="prog_{{list_camers[ind].id}}_label">0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <video id="video_{{ list_camers[ind].id }}" style="display:none;" muted="muted" preload="none" poster="/static/img/cam_{{ list_camers[ind].id }}.jpg" width="480" height="320" controls>
+        <!--                        <source src="/static/tmp/video/22.mp4" type="video/mp4" >-->
+                                <source src="/static/tmp/video/{{list_camers[ind].id}}_create.webm" type="video/webm" >
+        <!--                        <source src="/static/tmp/video/{{list_camers[ind].id}}_create.mp4" type="video/webm">-->
+                              <p>Ваш браузер не поддерживает HTML5 видео. Используйте <a href="tmp/video/{{list_camers[ind].id}}_create.mp4">ссылку на видео</a> для доступа.</p>
+                            </video>
+                        </div>
+
+                        {% if list_camers[ind].id in list_video %}
+                            <div id="button_show_last_video_{{ list_camers[ind].id }}">
+                                <button type="submit" class="button_camera" onclick="button_click_last_video(this)" name = '{{ list_camers[ind].id }}' >Показать последний ролик</button>
+                            </div>
+                        {% else %}
+                            <div id="button_show_last_video_{{ list_camers[ind].id }}" style="display:none;">
+                                <button type="submit" class="button_camera" onclick="button_click_last_video(this)" name = '{{ list_camers[ind].id }}' >Показать последний ролик</button>
+                            </div>
+                        {% endif %}
+
+                {% endif %}
+                </div>
+
+            </form>       
+        </div>
+    {% endfor %}
+
+    
+        <div data-display="none"  id="hide_array2" style="display: none;">
+            <form action="/camers" name = "camera" onsubmit="return false;" id="camera" enctype="multipart/form-data">
+                    <div  class="add_camera"> 
+                        <div class="tabs"> 
+                        
+                            <div class="button_add_camera">
+                                <button type="submit" class="button_camera" onclick="button_click_video_mode(this)" value="strim">Стрим</button> 
+                                <button type="submit" class="button_camera"  onclick="button_click_video_mode(this)"  value="load_video">Загрузка видео</button> 
+                            </div>
+                            
+                            <div class="item">
+                                <label for="name_cam">Имя камеры </label>
+                                <input type="text" name = "name_cam"  value="">
+                            </div> 
+
+                            <div id = "strim_setting"> 
+                                <div id="content_1" class="camera_setting"> 
+                                    <div class="item"><label for="url">Url</label><input type="text" name = "url" id="url" size="40"></div> 
+                                </div> 
+                            </div>
+
+                            <div id = "load_video_setting" style="display: none;"> 
+                                <div id="content_1" class="camera_setting">
+                                    <div class="item"> 
+                                        <label for="file_input">Видеофайл</label> 
+                                        
+                                            <input type="file" name="file" id="file_input" style="margin: auto; text-align: right;">
+                                            <div id="log_upload">Прогресс загрузки</div>
+
+                                    </div>
+                                    <div class="item"><label for="ts">Время начала видео</label> <input class="mask-date" type="text" name="ts" id="ts"></div> 
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <label for="fps">Частота обработки </label>
+                                <input type="text" name = "fps" id="fps" onkeyup='button_click_onkeyup(this)' value="{{ default_params.proc_freq }}">
+                            </div> 
+
+                            
+                            <div class="item"><label for="label_rabbit_header">Хеадер </label>
+                                {% if list_header|length > 0 %}
+                                    <select id="rabbit_header">
+                                        {% for header in list_header %}
+                                            <option value="{{ header }}" id = "name_header"> {{ header }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div> 
+                        </div>
+
+                        <div class="button_add_camera"> 
+                            <button name="click_extend_setting" class="button_camera" value="true" onclick="button_click_show_extend_setting()" type="submit">Расширенные настройки</button>
+                        </div>
+                        
+                        <div class="extend_setting" id="extend_setting" style="display:none"> 
+                            <div class="item">
+                                <label for="max_dist_bboxes">Максимальная дистанция между боксами px</label> 
+                                <input type="number" name = "max_dist_bboxes" id="max_dist_bboxes" onkeyup='button_click_onkeyup(this)' value="{{ default_params.max_dist_between_bbox }}">
+                            </div> 
+
+                            <div class="item">
+                                <label for="min_square_bboxes">Минимальная площадь бокса детекции px</label> 
+                                <input type="number" name = "min_square_bboxes" id="min_square_bboxes" onkeyup='button_click_onkeyup(this)' value="{{ default_params.min_square_bbox }}">
+                            </div>
+
+                            <div class="item">
+                                <label for="time_delete_tracking">Количество кадров удаления трекера</label> 
+                                <input type="number" name = "time_delete_tracking" id="time_delete_tracking" onkeyup='button_click_onkeyup(this)' value="{{ default_params.num_frame_delete }}" >
+                            </div>
+                        </div>
+
+                        <div class="button_add_camera">
+                            <button type="submit" class="button_camera" onclick="button_click_camera(this)" name="add" >Добавить</button> 
+                            <button type="submit" class="button_camera" onclick="button_click_camera(this)" id='detele_add_cam' name="delete" >Удалить камеру</button> 
+                        </div>
+                    </div>
+            </form>
+        </div>
+        <div class="show_add_cam">
+            <button data-open="hide_array2" class="button" onclick="button_click_add_cam()">Создать камеру</button>
+        </div>
+    </div>
+<div id="log"></div>
+{% endblock %}

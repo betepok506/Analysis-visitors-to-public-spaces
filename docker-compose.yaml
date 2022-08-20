@@ -1,0 +1,85 @@
+version: "2.1"
+# пробросить ./video
+# залить базу из sql/park.sql
+
+services:
+  rabbitmq:
+    # image: rabbitmq:3-management-alpine
+    # container_name: 'rabbitmq'
+    # environment:
+    #   RABBITMQ_DEFAULT_USER: admin
+    #   RABBITMQ_DEFAULT_PASS: admin
+    # volumes:
+    #     - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+    #     - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    image: rabbitmq:3-management
+    hostname: my-rabbit
+    volumes:
+      - ./rabbitmq/etc/definitions.json:/etc/rabbitmq/definitions.json
+      # - ./rabbitmq/etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitmq/data:/var/lib/rabbitmq/mnesia/rabbit@my-rabbit
+      - ./rabbitmq/logs:/var/log/rabbitmq/log
+    ports:
+        - 5673:5672
+        - 15673:15672
+    healthcheck:
+        # test: ["CMD", "nc", "-f", "http://my-rabbit:15672"]
+        # test: ["CMD", "curl", "-f", "http://my-rabbit:15673"]
+        test: rabbitmq-diagnostics check_port_connectivity
+        interval: 5s
+        timeout: 20s
+        retries: 5
+    networks:
+      - postgres
+
+  park-backend:
+    build:
+      context: .
+      dockerfile: application.Dockerfile
+    ports:
+      # - 55007:8282
+      - 5671:8282
+    volumes:
+      - ./video:/app/video
+#      - ./src:/app/src
+      - ./tmp:/app/tmp
+      - ./data_:/app/data_
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      park-db:
+        condition: service_started
+
+      # - park-db
+      # - rabbitmq
+    links: 
+        - rabbitmq
+    environment:
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:park@park-db:5432/park"
+    networks:
+      - postgres
+    # work with docker-compose v 1.27.0+
+    runtime: nvidia
+  
+  park-db:
+    # image: 'postgres:latest'
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    restart: always
+    ports:
+      - 3876:5432
+    volumes:
+      - park-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=park
+      - POSTGRES_DB=park
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  park-db-data:

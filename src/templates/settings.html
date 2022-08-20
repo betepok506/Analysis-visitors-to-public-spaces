@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="settings_body">
+        <div class="header_setting">
+            Настройки
+        </div>
+        <div class="block_setting">
+            <div class="item_setting">
+                <form action="/load_map" onsubmit="return false;" id="form_load_map" enctype="multipart/form-data">
+                    
+                    <div class="row_setting">
+                        <div class="left_column_settings">
+                            <label for="file_input">Загрузка карты</label> 
+                        </div>
+                        <div class="right_column_settings">
+                            <input type="file" name="file" id="file_input">
+                            <button type="submit" class="button_camera"  onclick="load_map()"  value="button_load_map">Загрузить</button> 
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="item_setting">
+                <div class="map">
+                    <svg class="svg_map" viewBox="0 0 970 852">
+                        {% for ind in range(pol|length): %}
+                            <path class="part" style = "opacity: 0.55; fill: green;" d="{{pol[ind].polygons}}" title={{pol[ind].area_id}}></path>
+                        {% endfor %}
+                        <img src="static/img/Karta.svg" width="630px" height="553px" alt="">
+                    </svg>
+                </div>
+
+                <form action="/load_polygons" onsubmit="return false;" id="form_polygons">
+                        <div class="list_polygons">
+                            {% for ind in range(pol|length): %}
+                                <div class="polygons_item" id="polygons_item_{{ind}}" name="polygons_item_{{ind}}">
+                                    <div>
+                                        <label for="polygons">Полигон</label> 
+                                        <input type="text"  class='polygons_coord' name = "polygons" value = "{{pol[ind].polygons}}">
+                                    </div>
+                                    <div>
+                                        <label for="polygons">Номер зоны</label> 
+                                        <input type="number" class='area_id' name = "area_id" value = {{pol[ind].area_id}}>
+                                    </div>
+                                    <div>
+                                        <span class="closebtn" id={{ind}} onclick="span_click_closebtn_setting(this)">&times;</span> 
+                                    </div>
+                                </div>
+                                
+                            {% endfor %}
+                            
+                        </div>
+                        <div style="margin:20px">
+                            <button type="submit" class="button_camera" onclick="button_click_add_polygons_setting(this)" name='add'>Добавить полигон</button> 
+                            <button type="submit" class="button_camera" onclick="button_click_add_polygons_setting(this)" name='draw'>Нарисовать</button> 
+                            <button type="submit" class="button_camera" onclick="button_click_add_polygons_setting(this)" name='save' >Сохранить</button> 
+                        </div>
+                    </form>
+                
+
+
+                <form action="/load_markup" onsubmit="return false;" id="form_load_markup" enctype="multipart/form-data">
+                    
+                    <!-- <div class="row_setting">
+                        <div class="left_column_settings">
+                            <label for="file_input">Загрузка разметки карты</label> 
+                        </div>
+                        <div class="right_column_settings">
+                            <input type="file" name="file" id="file_input">
+                            <button type="submit" class="button_camera"  onclick="load_markup()"  value="button_load_markup">Загрузить</button> 
+                        </div>
+                    </div> -->
+
+                </form>
+            </div>
+        </div>
+
+        <div class="block_setting">
+
+            <div style="margin: auto; font-size: 22px;">
+                Изменение стандартных настроек камеры
+            </div>
+            <div class="item_setting">
+                <form action="/editing_setting" onsubmit="return false;" id="editing_setting" style="display: flex; flex-direction: column;">
+                    
+                    <div class="row_setting">
+                        <div class="left_column_settings">
+                            <label for="fps">Частота обработки</label> 
+                        </div>
+                        <div class="right_column_settings">
+                            <input type="number" name = "fps" id="fps" onkeyup='button_click_onkeyup(this)' value="{{ default_value.proc_freq }}">
+                        </div>
+                    </div>
+                    
+                    <div class="row_setting">
+                        <div class="left_column_settings">
+                            <label for="time_delete_tracking">Количество кадров, по прошествии которых удалить трекер в случае его неактивности</label> 
+                        </div>
+                        <div class="right_column_settings">
+                            <input type="number" name = "time_delete_tracking" id="time_delete_tracking" onkeyup='button_click_onkeyup(this)' value="{{default_value.num_frame_delete}}">
+                        </div>
+                    </div>
+
+                    <div class="row_setting">
+                        <div class="left_column_settings">
+                            <label for="min_square_bboxes">Минимальная площадь детектируемых боксов</label> 
+                        </div>
+                        <div class="right_column_settings">    
+                            <input type="number" name = "min_square_bboxes" id="min_square_bboxes" onkeyup='button_click_onkeyup(this)' value="{{ default_value.min_square_bbox }}">
+                        </div>
+                    </div>
+                    
+                    <div class="row_setting">
+                        <div class="left_column_settings">
+                            <label for="max_dist_bboxes">Максимальная дистанция для продолжения отслеживания трекера</label> 
+                        </div>
+
+                        <div class="right_column_settings">
+                            <input type="number" name = "max_dist_bboxes" id="max_dist_bboxes" onkeyup='button_click_onkeyup(this)' value="{{ default_value.max_dist_between_bbox }}">
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: right;">
+                        <button type="submit" class="button_camera"  onclick="button_click_save_editing_setting()" value="button_save_editing_setting">Сохранить</button> 
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

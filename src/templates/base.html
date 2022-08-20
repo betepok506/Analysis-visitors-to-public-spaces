@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1, shrink-to-fit=no">
+    <title>Статистика по области наблюдения</title>
+    <link rel="stylesheet" href="https://bootstraptema.ru/plugins/2015/bootstrap3/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://bootstraptema.ru/plugins/2016/shieldui/style.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}} ">
+
+<!--    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='javascript/script.js')}}"></script>
+    <!-- <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.0.min.js" crossorigin="anonymous"></script> -->
+    <script src="{{ url_for('static', filename='javascript/bokeh-2.4.0.min.js')}}" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.0.min.js" crossorigin="anonymous"></script> -->
+    <script src="{{ url_for('static', filename='javascript/bokeh-widgets-2.4.0.min.js')}}" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.0.min.js" crossorigin="anonymous"></script> -->
+    <script src="{{ url_for('static', filename='javascript/bokeh-tables-2.4.0.min.js')}}" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+    
+    <!-- Toast -->
+    <script src="{{ url_for('static', filename='javascript/toast.min.js')}}"></script>
+    <!-- SocketsIo -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+    <!-- <script src="jquery.maskedinput.min.js"></script> -->
+
+    <script type="text/javascript" charset="utf-8">
+            
+        $(document).ready(function() {
+        
+            var socket = io();
+        
+
+            // socket.on('connect', function() {
+            //     socket.emit('my_event', {data: 'I\'m connected!'});
+            // });
+
+
+            socket.on('my_response', function(msg, cb) {
+                //$('#log').append('<br>' + $('<div/>').text('Received #' + msg.type_messange + ': ' + msg.data).html());
+                new Toast({
+                    title: ''+msg.title,
+                    text: msg.data,
+                    theme: ''+msg.type_messange,
+                    autohide: true,
+                    interval: 10000
+                });
+
+                if (cb)
+                    cb();
+            });
+            
+            // socket.on('get_info2web', function(msg, cb) {
+            //     node = document.getElementsByClassName('camera_'+ msg.id)[0];
+
+            //     if (node.style.display =='block')
+            //     {
+            //         node.style.display='none'
+            //     }
+            //     else 
+            //     {
+            //         list_input = node.getElementsByTagName('input');
+            //         node.style.display ='block';
+            //         list_input.name_cam.value = msg.name_cam;
+            //         list_input.ts.value = msg.start_ts;
+            //         list_input.fps.value = msg.fps;
+            //         // list_input.polygons.value = msg.polygons;
+            //         list_input.max_dist_bboxes.value = msg.max_dist_between_bbox;
+            //         list_input.min_square_bboxes.value = msg.min_square_bbox;
+            //         list_input.time_delete_tracking.value = msg.cnt_fps_del;
+            //     };
+
+            //     if (cb)
+            //         cb();
+            // });
+
+            var ping_pong_times = [];
+            var start_time;
+            window.setInterval(function() {
+                start_time = (new Date).getTime();
+                $('#transport').text(socket.io.engine.transport.name);
+                socket.emit('my_ping');
+            }, 1000);
+            
+            // form редактирования настройки камер
+            $('form#editing_camera').submit(function(event) {
+                console.log(event);
+                socket.emit('my_event', {data: $('#emit_data').val()});
+                return false;
+            });
+
+
+<!--            socket.on('my_pong', function() {-->
+<!--                var latency = (new Date).getTime() - start_time;-->
+<!--                ping_pong_times.push(latency);-->
+<!--                ping_pong_times = ping_pong_times.slice(-30); // keep last 30 samples-->
+<!--                var sum = 0;-->
+<!--                for (var i = 0; i < ping_pong_times.length; i++)-->
+<!--                    sum += ping_pong_times[i];-->
+<!--                $('#ping-pong').text(Math.round(10 * sum / ping_pong_times.length) / 10);-->
+<!--            });-->
+            
+            window.onload = function () {
+                var block_add_cam = sessionStorage.getItem('block_add_cam');
+                if (block_add_cam!=null && block_add_cam == 'true') {
+                    button_click_add_cam();
+                }
+                var toast_block = JSON.parse(sessionStorage.getItem('toast'));
+                if (toast_block != null){
+
+                    if(toast_block.length != 0){
+                        for(var i = 0;i<toast_block.length;i++){
+                            let now = new Date();
+                            
+                            if(now.getTime() - toast_block[i]['time_create'] < toast_block[i]['time_live']){
+                                new Toast({
+                                    title: toast_block[i]['title'],
+                                    text: toast_block[i]['body'],
+                                    theme: ''+toast_block[i]['header'],
+                                    autohide: true,
+                                    interval: toast_block[i]['time_live'] - (now.getTime() - toast_block[i]['time_create']) 
+                                });
+                            }
+                        }
+
+                    }
+                }
+                
+                var dict_polygons = JSON.parse(sessionStorage.getItem('polygons_add'));
+                if(dict_polygons!=null){
+                
+                    for (const [key, value] of Object.entries(dict_polygons)) {
+
+                        list_polygons = value;
+                        id = key;
+                        if(list_polygons.length==0) continue;
+                        node_polygons = document.getElementsByClassName('polygons_'+id)[0];
+                        
+                        if(node_polygons.style.display == 'none'){
+                            node_polygons.style.display = 'flex';
+                        }
+
+                        x = document.getElementsByClassName('polygons_'+id)[0];
+                        cur_elem = x.getElementsByClassName('list_polygons')[0];
+                        
+                        id_elem = 2;
+                        
+                        first_polygons = x.getElementsByClassName('polygons_item')[0];
+
+                        first_polygons.getElementsByClassName('polygons_coord')[0].value = list_polygons[0]['polygons'];
+                        first_polygons.getElementsByClassName('id_cam')[0].value = list_polygons[0]['id_cam'];
+
+                        parser = new DOMParser;
+                        for(var i = 1; i < list_polygons.length; i++){
+                            var elemDiv = document.createElement('div');
+                            elemDiv.className = 'polygons_item';
+                            elemDiv.name = "polygons_item_" + id_elem;
+                            elemDiv.id = "polygons_item_" + id_elem;
+                            
+                            var Div_ = document.createElement('div');
+                            var label_ = document.createElement('label');
+                            label_.innerText = 'Полигон';
+                            label_.setAttribute('for','polygons');
+                            
+                            var input_ = document.createElement('input');
+                            input_.setAttribute('class', 'polygons_coord');
+                            input_.setAttribute('type', 'text');
+                            input_.setAttribute('name', 'polygons_'+id);
+                            input_.value = list_polygons[i]['polygons'];
+                            input_.onchange = function () {  
+                                validation_polygons(this);
+                            };
+
+                            Div_.appendChild(label_);
+                            Div_.appendChild(input_);
+                            elemDiv.appendChild(Div_);
+
+                            Div_ = document.createElement('div');
+                            label_ = document.createElement('label');
+                            label_.innerText = 'Номер зоны';
+                            label_.setAttribute('for','polygons');
+
+                            input_ = document.createElement('input');
+                            input_.setAttribute('type', 'number');
+                            input_.setAttribute('class', 'id_cam');
+                            input_.setAttribute('name', 'id_cam_'+id);
+                            input_.value = list_polygons[i]['id_cam'];
+                            input_.onchange = function () {  
+                                validation_polygons(this);
+                            };
+
+                            Div_.appendChild(label_);
+                            Div_.appendChild(input_);
+                            elemDiv.appendChild(Div_);
+
+                            Div_ = document.createElement('div');
+                            Div_.innerHTML = `<span class="closebtn" id="${id}_${id_elem}" \
+                                                    onclick="span_click_closebtn(this)">&times;</span> `
+                            
+                            elemDiv.appendChild(Div_);
+
+                            cur_elem.appendChild(elemDiv);
+                            id_elem+=1;
+                        }
+                        draw_polygon(id);   
+                    }
+                }
+                
+                
+            };
+
+            $('form#emit').submit(function(event) {
+                socket.emit('my_event', {data: $('#emit_data').val()});
+                return false;
+            });
+
+            $('form#events_process_old').submit(function(event) {
+                var button_clicked_name = event.originalEvent.submitter.name.split('_')[0];
+                if(button_clicked_name != 'save'){
+                    socket.emit('events_process_old', {'button': button_clicked_name,
+                                                 'id': this.getElementsByTagName("input")[0].name});
+                    if(button_clicked_name == 'delete'){
+                        setTimeout(function(){
+                            location.reload();
+                        }, 2000);
+                    }
+                }else{
+                    var form_ = event.originalEvent.path[0];
+
+                    if(check_param_editing(form_)){
+                        socket.emit('events_process_old', {'button': button_clicked_name,
+                                                    'id': this.getElementsByTagName("input")[0].name,
+                                                    'data': {'name_cam': form_['name_cam'].value,
+                                                            'ts':form_['ts'].value,
+                                                            'fps':form_['fps'].value,
+                                                            'polygons':form_['polygons'].value,
+                                                            'max_dist_bboxes':form_['max_dist_bboxes'].value,
+                                                            'min_square_bboxes':form_['min_square_bboxes'].value,
+                                                            'time_delete_tracking':form_['time_delete_tracking'].value
+                                                        }});
+                        setTimeout(function(){
+                            location.reload();
+                            }, 2000);
+                    }
+                }
+                return false;
+            });
+
+            // $('form#camera').submit(function(event) {
+            //     var button_clicked_name = event.originalEvent.submitter.name;
+            //     if(button_clicked_name == 'add'){
+
+            //         if(document.getElementById('rabbit_header') == null){
+            //             new Toast({
+            //             title: 'Ошибка создания камеры',
+            //             text: 'Для создания камеры необходим хеадер!',
+            //             theme: ''+'warning',
+            //             autohide: true,
+            //             interval: 10000
+            //             });
+            //             return false;
+            //         }
+
+            //         res = get_element_create_cam(this);
+            //         if(res != false){
+            //             socket.emit('create_camera',res);
+
+            //             let block = document.getElementById('hide_array2');
+            //             block.style.display = 'none';
+            //             sessionStorage.setItem('block_add_cam', false);
+            //             block = document.getElementsByClassName('show_add_cam')[0];
+            //             block.style.display = 'flex';
+
+            //             setTimeout(function(){
+            //                 location.reload();
+            //             }, 2000);
+            //         }
+            //     }else if(button_clicked_name == 'delete'){
+            //         let block = document.getElementById('hide_array2');
+            //         block.style.display = 'none';
+            //         sessionStorage.setItem('block_add_cam', false);
+            //         block = document.getElementsByClassName('show_add_cam')[0];
+            //         block.style.display = 'flex';
+            //     }
+                
+            //     // location.reload()
+            //     return false;
+            // });
+            
+            $('form#detector').submit(function(event) {
+                var button_clicked_name = event.originalEvent.submitter.name;
+             
+                if(button_clicked_name == 'add'){
+
+                    if(document.getElementById('rabbit_header') == null){
+                        new Toast({
+                        title: 'Ошибка создания детектора',
+                        text: 'Для создания детектора необходим хеадер!',
+                        theme: ''+'warning',
+                        autohide: true,
+                        interval: 10000
+                        });
+                        return false;
+                    }
+
+                    res = get_element_create_detector(this);
+                    socket.emit('create_detector',res);
+                    setTimeout(function(){
+                        location.reload();
+                    }, 500);
+                    
+                }
+                else{
+                    let block = document.getElementById('id_add_detector');
+                    block.style.display='none';
+                    block = document.getElementsByClassName('button_show_add_detector')[0];
+                    block.style.display = 'flex';
+
+                }
+                // location.reload()
+                return false;
+            });
+            
+            $('form#classifaer').submit(function(event) {
+                var button_clicked_name = event.originalEvent.submitter.name;
+                console.log('Classifaer');;
+                if(button_clicked_name == 'add'){
+
+                    if(document.getElementById('rabbit_header') == null){
+                        new Toast({
+                        title: 'Ошибка создания классификатора!',
+                        text: 'Для создания классификатора необходим хеадер!',
+                        theme: ''+'warning',
+                        autohide: true,
+                        interval: 10000
+                        });
+                        return false;
+                    }
+
+                    res = get_element_create_classifaer(this);
+                    socket.emit('create_classifaer',res);
+                    setTimeout(function(){
+                        location.reload();
+                    }, 500);
+                }
+                else{
+                    let block = document.getElementById('id_add_classifaer');
+                    block.style.display='none';
+                    block = document.getElementsByClassName('button_show_add_detector')[0];
+                    block.style.display = 'flex';
+
+                }
+                // location.reload()
+                return false;
+            });
+
+            $('form#test').submit(function(event) {
+                socket.emit('test');
+                return false;
+            });
+
+            $('form#broadcast').submit(function(event) {
+                socket.emit('my_broadcast_event', {data: $('#broadcast_data').val()});
+                return false;
+            });
+
+
+        });
+
+    </script>
+    <!-- SocketsIo -->
+</head>
+<body>
+   
+    <div class="body">
+        <div class="page_header">
+            <div class="page_header_left">
+                <a href="camers" class="button">Камеры</a>
+                <a href="headers" class="button">Хеадеры</a>
+                <a href="classifaers" class="button">Классификаторы</a>
+                <a href="detectors" class="button">Детекторы</a>
+                <a href="..//" class="button">Статистика</a>
+            </div>
+
+            <div class="page_header_right">
+<!--                <div class="ping" style="width:150px;"> Ping server:  <b><span id="ping-pong"></span> ms</b></div>-->
+                <a href="settings" class="button">Настройки</a>
+            </div>
+            
+        </div>
+        {% block body  %}
+        {% endblock %}
+        <div class="toast-container" style="top: -128.6px;"></div>
+    </div>
+
+    
+</body>
+</html>
